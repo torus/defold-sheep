@@ -1,0 +1,26 @@
+-- -*- mode: lua; tab-width: 4 -*-
+function init(self)
+    msg.post(".", "acquire_input_focus")
+    msg.post("@render:", "use_fixed_fit_projection", { near = -1, far = 1 })
+
+    self.sheeps = {}
+    self.center = vmath.vector3(640, 360, 0)
+
+    for i = 1, 200 do
+        local s = factory.create("/go#factory",
+                                 vmath.vector3(math.random(1280),
+                                               math.random(720), 0))
+
+        table.insert(self.sheeps, s)
+        msg.post(s, "set_target", {target = self.center})
+    end
+end
+
+function update(self, dt)
+end
+
+function on_input(self, action_id, action)
+    if action_id == hash("touch") and action.pressed then
+        print("Touch!")
+    end
+end

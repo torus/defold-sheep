@@ -1,0 +1,31 @@
+-- -*- mode: lua; tab-width: 4 -*-
+function init(self)
+    self.target = nil
+end
+
+function final(self)
+end
+
+function update(self, dt)
+end
+
+function fixed_update(self, dt)
+    local pos = go.get_world_position()
+    local vec = self.target - pos
+
+    msg.post("#collisionobject", "apply_force",
+             {force = vec,
+              position = pos})
+end
+
+function on_message(self, message_id, message, sender)
+    if message_id == hash("set_target") then
+        self.target = vmath.vector3(message.target)
+    end
+end
+
+function on_input(self, action_id, action)
+end
+
+function on_reload(self)
+end
