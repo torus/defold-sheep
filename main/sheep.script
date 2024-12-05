@@ -1,6 +1,6 @@
 -- -*- mode: lua; tab-width: 4 -*-
 function init(self)
-    self.target = nil
+    self.leader = nil
 end
 
 function final(self)
@@ -10,17 +10,19 @@ function update(self, dt)
 end
 
 function fixed_update(self, dt)
-    local pos = go.get_world_position()
-    local vec = self.target - pos
+    if self.leader then
+        local target = go.get_world_position(self.leader)
+        local pos = go.get_world_position()
+        local vec = (target - pos) / 2
 
-    msg.post("#collisionobject", "apply_force",
-             {force = vec,
-              position = pos})
+        msg.post("#collisionobject", "apply_force", {force = vec, position = pos})
+    end
 end
 
 function on_message(self, message_id, message, sender)
-    if message_id == hash("set_target") then
-        self.target = vmath.vector3(message.target)
+    if message_id == hash("set_leader") then
+        self.leader = message.leader
+        print(self.leader)
     end
 end
 

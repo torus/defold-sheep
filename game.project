@@ -29,7 +29,11 @@ input_method = HiddenInputField
 gravity_y = 0.0
 scale = 0.01
 velocity_threshold = 100.0
+max_collision_object_count = 512
 
 [html5]
 scale_mode = stretch
+
+[sprite]
+max_count = 512
 

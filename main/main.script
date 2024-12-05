@@ -3,20 +3,28 @@ function init(self)
     msg.post(".", "acquire_input_focus")
     msg.post("@render:", "use_fixed_fit_projection", { near = -1, far = 1 })
 
-    self.sheeps = {}
-    self.center = vmath.vector3(640, 360, 0)
+    self.elapsed_time = 0
 
-    for i = 1, 200 do
-        local s = factory.create("/go#factory",
+    self.sheeps = {}
+    local initial_pos = vmath.vector3(640, 360, 0)
+
+    self.leader = factory.create("/go#leader_factory", initial_pos)
+
+    for i = 1, 500 do
+        local s = factory.create("/go#sheep_factory",
                                  vmath.vector3(math.random(1280),
                                                math.random(720), 0))
 
         table.insert(self.sheeps, s)
-        msg.post(s, "set_target", {target = self.center})
+        msg.post(s, "set_leader", {leader = self.leader})
     end
 end
 
 function update(self, dt)
+    self.elapsed_time = self.elapsed_time + dt
+    go.set_position(vmath.vector3(math.cos(self.elapsed_time    ) * 600 + 640,
+                                  math.sin(self.elapsed_time / 3) * 300 + 360, 0),
+                    self.leader)
 end
 
 function on_input(self, action_id, action)
